@@ -33,7 +33,7 @@ namespace Download_Photo_Facebook
             try
             {
                 var endpoint = id + "/photos/uploaded";
-                var result = await GetPhotosUploaded<dynamic>(
+                var result = await FacebookGetAsync<dynamic>(
                     accessToken, endpoint, "limit=9999");
 
                 
@@ -47,7 +47,7 @@ namespace Download_Photo_Facebook
                     var endpoint_2 = photos.id;
                     try
                     {
-                        var result_2 = await GetDirectLinkPhotosUploaded<dynamic>(accessToken, endpoint_2, "fields=images");
+                        var result_2 = await FacebookGetAsync<dynamic>(accessToken, endpoint_2, "fields=images");
 
                         int height = 0;
                         int heightmax = 0;
@@ -78,7 +78,7 @@ namespace Download_Photo_Facebook
                 Console.WriteLine("Dang get link hinh user bi tag");
 
                 var endpoint_3 = id + "/photos";
-                var result_4 = await GetPhotosUploaded<dynamic>(
+                var result_4 = await FacebookGetAsync<dynamic>(
                     accessToken, endpoint_3, "limit=9999");
 
                 var result_data_4 = result_4.data;
@@ -91,7 +91,7 @@ namespace Download_Photo_Facebook
                     var endpoint_2 = photos.id;
                     try
                     {
-                        var result_2 = await GetDirectLinkPhotosUploaded<dynamic>(accessToken, endpoint_2, "fields=images");
+                        var result_2 = await FacebookGetAsync<dynamic>(accessToken, endpoint_2, "fields=images");
 
                         int height = 0;
                         int heightmax = 0;
@@ -129,17 +129,7 @@ namespace Download_Photo_Facebook
             return listDirectLinkPhotos;
         }
 
-        public async Task<T> GetPhotosUploaded<T>(string accessToken, string endpoint, string args = null)
-        {
-            var response = await _httpClient.GetAsync($"{endpoint}?access_token={accessToken}&{args}");
-            if (!response.IsSuccessStatusCode)
-                return default(T);
-
-            var result = await response.Content.ReadAsStringAsync();
-
-            return JsonConvert.DeserializeObject<T>(result);
-        }
-        public async Task<T> GetDirectLinkPhotosUploaded<T>(string accessToken, string endpoint, string args = null)
+        public async Task<T> FacebookGetAsync<T>(string accessToken, string endpoint, string args = null)
         {
             var response = await _httpClient.GetAsync($"{endpoint}?access_token={accessToken}&{args}");
             if (!response.IsSuccessStatusCode)
